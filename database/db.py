@@ -45,6 +45,14 @@ def init_db():
         FOREIGN KEY (niveau_id) REFERENCES niveau(id),
         FOREIGN KEY (specialite_id) REFERENCES specialite(id)
     );
+                         
+    CREATE TABLE IF NOT EXISTS message ( 
+         id INTEGER PRIMARY KEY AUTOINCREMENT, 
+         sender_id INTEGER NOT NULL, 
+         content TEXT NOT NULL, 
+         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, 
+         FOREIGN KEY (sender_id) REFERENCES users(id)
+     );
 
     INSERT OR IGNORE INTO niveau (id, nom) VALUES (1,'S'), (2,'A'), (3,'C');
 
