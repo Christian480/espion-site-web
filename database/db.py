@@ -1,5 +1,5 @@
 import sqlite3
-import bcrypt
+import bcryp
 
 def create_user(code_name, niveau_id, specialite_id, password):
     password_bytes = password.encode("utf-8")
