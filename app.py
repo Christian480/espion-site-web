@@ -1,44 +1,31 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask
 
-app = Flask(__name__)
+from database.db import init_db
+from routes.auth_routes import auth_bp
+from routes.chat_routes import chat_bp
+from routes.main_routes import main_bp
 
-# page accueil
-@app.route("/")
-def home():
-    return render_template("index.html")
 
-# page inscription
-@app.route("/register", methods=["GET","POST"])
-def register():
+def create_app(test_config=None):
+    app = Flask(__name__)
+    app.config["SECRET_KEY"] = "shadowcomm-secret"
+    app.config["DATABASE"] = "shadowcomm.db"
+    app.config["CAESAR_KEY"] = 3
 
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+    if test_config is not None:
+        app.config.update(test_config)
 
-        print("Nouvel utilisateur :", username)
+    init_db(app.config["DATABASE"])
 
-        return redirect(url_for("login"))
+    app.register_blueprint(main_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(chat_bp)
 
-    return render_template("register.html")
+    return app
 
-# page connexion
-@app.route("/login", methods=["GET","POST"])
-def login():
 
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
+app = create_app()
 
-        print("Connexion :", username)
-
-        return redirect(url_for("chat"))
-
-    return render_template("login.html")
-
-# page chat
-@app.route("/chat")
-def chat():
-    return render_template("chat.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

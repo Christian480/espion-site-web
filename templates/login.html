@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion - ShadowComm</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Connexion</h1>
+      <form method="post" class="card form-card">
+        <label for="username">Nom de code</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit" class="button">Se connecter</button>
+      </form>
+
+      <p>
+        <a href="{{ url_for('auth.register') }}"
+          >Pas encore de compte ? Inscription</a
+        >
+      </p>
+      <p><a href="{{ url_for('main.home') }}">Retour à l'accueil</a></p>
+    </div>
+  </body>
+</html>

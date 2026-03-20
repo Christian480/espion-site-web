@@ -1,79 +1,74 @@
 import sqlite3
-import bcrypt
 
-def create_user(code_name, niveau_id, specialite_id, password):
-    password_bytes = password.encode("utf-8")
-    hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
 
-    db = sqlite3.connect("shadowcomm.db")
-    cursor = db.cursor()
-    cursor.execute("SELECT id FROM users WHERE code_name = ?", (code_name,))
-    if cursor.fetchone():
-        print(f"{code_name} existe déjà dans la base de données.")
-        db.close()
-        return
+def get_connection(db_name="shadowcomm.db"):
+    db = sqlite3.connect(db_name)
+    db.row_factory = sqlite3.Row
+    return db
+
+
+def create_users_table(cursor):
     cursor.execute(
-        "INSERT OR IGNORE INTO users (code_name, niveau_id, specialite_id, password) VALUES (?,?,?,?)",
-        (code_name, niveau_id, specialite_id, hashed_password)
+        """
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL UNIQUE,
+            password BLOB NOT NULL
+        )
+        """
     )
 
-    db.commit()
-    db.close()
+
+def update_old_users_table(cursor):
+    columns = cursor.execute("PRAGMA table_info(users)").fetchall()
+    column_names = []
+
+    for column in columns:
+        column_names.append(column["name"])
+
+    if "code_name" in column_names and "username" not in column_names:
+        cursor.execute("ALTER TABLE users ADD COLUMN username TEXT")
+        cursor.execute("UPDATE users SET username = code_name WHERE username IS NULL")
+        cursor.execute(
+            "CREATE UNIQUE INDEX IF NOT EXISTS index_users_username ON users(username)"
+        )
 
 
-def init_db():
-    db = sqlite3.connect("shadowcomm.db")
+def create_messages_table(cursor):
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sender_id INTEGER NOT NULL,
+            content TEXT NOT NULL,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (sender_id) REFERENCES users(id)
+        )
+        """
+    )
+
+
+def update_old_messages_table(cursor):
+    columns = cursor.execute("PRAGMA table_info(messages)").fetchall()
+    column_names = []
+
+    for column in columns:
+        column_names.append(column["name"])
+
+    if column_names != []:
+        if "sender_id" not in column_names or "content" not in column_names:
+            cursor.execute("DROP TABLE IF EXISTS messages")
+            create_messages_table(cursor)
+
+
+def init_db(db_name="shadowcomm.db"):
+    db = get_connection(db_name)
     cursor = db.cursor()
 
-    cursor.executescript("""
-    CREATE TABLE IF NOT EXISTS niveau (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nom TEXT NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS specialite (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        specialite TEXT NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        code_name TEXT NOT NULL UNIQUE,
-        niveau_id INTEGER NOT NULL,
-        specialite_id INTEGER NOT NULL,
-        password BLOB NOT NULL,
-        FOREIGN KEY (niveau_id) REFERENCES niveau(id),
-        FOREIGN KEY (specialite_id) REFERENCES specialite(id)
-    );
-                         
-    CREATE TABLE IF NOT EXISTS message ( 
-         id INTEGER PRIMARY KEY AUTOINCREMENT, 
-         sender_id INTEGER NOT NULL, 
-         content TEXT NOT NULL, 
-         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, 
-         FOREIGN KEY (sender_id) REFERENCES users(id)
-     );
-
-    INSERT OR IGNORE INTO niveau (id, nom) VALUES (1,'S'), (2,'A'), (3,'C');
-
-    INSERT OR IGNORE INTO specialite (id, nom) VALUES
-    (1,'agent-double'),
-    (2,'agent-infiltré'),
-    (3,'agent-informateur'),
-    (4,'cyber-espion');
-    """)
-
-    cursor.execute("DROP TABLE IF EXISTS messages")
+    create_users_table(cursor)
+    update_old_users_table(cursor)
+    create_messages_table(cursor)
+    update_old_messages_table(cursor)
 
     db.commit()
     db.close()
-
-
-init_db()
-
-
-create_user("agent007", 1, 4, "agent007@2026")
-create_user("agentX", 2, 1, "motdepasse123")
-create_user("ghost", 3, 2, "secret456")
-
-print("Base de données Shadowcomm initialisée avec succès !")
