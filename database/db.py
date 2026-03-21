@@ -45,6 +45,12 @@ def init_db():
         FOREIGN KEY (niveau_id) REFERENCES niveau(id),
         FOREIGN KEY (specialite_id) REFERENCES specialite(id)
     );
+    CREATE TABLE IF NOT EXISTS message (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        sender_id INTEGER NOT NULL,
+        content TEXT NOT NULL,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (sender_id) REFERENCES users(id) );
 
     INSERT OR IGNORE INTO niveau (id, nom) VALUES (1,'S'), (2,'A'), (3,'C');
 
@@ -55,6 +61,9 @@ def init_db():
     (4,'cyber-espion');
     """)
 
+    cursor.execute("ALTER TABLE users ADD COLUMN nom TEXT")
+    cursor.execute("ALTER TABLE users ADD COLUMN age INTEGER")
+    cursor.execute("ALTER TABLE users ADD COLUMN Lieu_affectation TEXT")
     cursor.execute("DROP TABLE IF EXISTS messages")
 
     db.commit()
@@ -64,8 +73,15 @@ def init_db():
 init_db()
 
 
-create_user("agent007", 1, 4, "agent007@2026")
-create_user("agentX", 2, 1, "motdepasse123")
-create_user("ghost", 3, 2, "secret456")
+create_user("agent007", 1, 4, "agent007@2026", "James Bond", 30, "Londres")
+create_user("agentX", 2, 1, "motdepasse123", "Agent X", 25, "New York")
+create_user("ghost", 3, 2, "secret456", "The Ghost", 35, "Tokyo")
+create_user("shadow", 2, 3, "shadow@2026", "Shadow", 28, "Paris")
+create_user("viper", 1, 2, "viperSecure", "Viper", 32, "Berlin")
+create_user("falcon", 1, 1, "falcon123", "Falcon", 27, "Rome")
+create_user("neo", 3, 4, "matrixNeo", "Neo", 29, "Zion")
+create_user("hunter", 2, 2, "hunt3r!", "Hunter", 31, "Los Angeles")
+create_user("zeus", 3, 3, "thunderBolt", "Zeus", 33, "Olympus")
+create_user("phantom", 2, 1, "phantomX", "Phantom", 26, "London")
 
 print("Base de données Shadowcomm initialisée avec succès !")
