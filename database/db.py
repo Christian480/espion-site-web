@@ -1,7 +1,7 @@
 import sqlite3
 import bcrypt
 
-def create_user(code_name, niveau_id, specialite_id, password):
+def create_user(code_name, niveau_id, specialite_id, password, nom, age, lieu_affectation):
     password_bytes = password.encode("utf-8")
     hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
 
@@ -13,8 +13,8 @@ def create_user(code_name, niveau_id, specialite_id, password):
         db.close()
         return
     cursor.execute(
-        "INSERT OR IGNORE INTO users (code_name, niveau_id, specialite_id, password) VALUES (?,?,?,?)",
-        (code_name, niveau_id, specialite_id, hashed_password)
+        "INSERT OR IGNORE INTO users (code_name, niveau_id, specialite_id, password, nom, age, lieu_affectation) VALUES (?,?,?,?,?,?,?)",
+        (code_name, niveau_id, specialite_id, hashed_password, nom, age, lieu_affectation)
     )
 
     db.commit()
@@ -61,9 +61,13 @@ def init_db():
     (4,'cyber-espion');
     """)
 
-    cursor.execute("ALTER TABLE users ADD COLUMN nom TEXT")
-    cursor.execute("ALTER TABLE users ADD COLUMN age INTEGER")
-    cursor.execute("ALTER TABLE users ADD COLUMN Lieu_affectation TEXT")
+    cursor.execute("ALTER TABLE users ADD IF NOT EXISTS COLUMN nom TEXT")
+    cursor.execute("ALTER TABLE users ADD IF NOT EXISTS COLUMN age INTEGER")
+    cursor.execute("ALTER TABLE users ADD IF NOT EXISTS COLUMN Lieu_affectation TEXT")
+    cursor.execute("ALTER TABLE message ADD IF NOT EXISTS COLUMN timestamp DATETIME")
+    cursor.execute("ALTER TABLE message ADD IF NOT EXISTS FOREIGN KEY (receiver_id) REFERENCES users(id)")
+    cursor.execute("ALTER TABLE message ADD IF NOT EXISTS COLUMN status INTEGER")
+    cursor.execute("ALTER TABLE message ADD IF NOT EXISTS COLUMN receiver_id INTEGER")
     cursor.execute("DROP TABLE IF EXISTS messages")
 
     db.commit()
