@@ -1,31 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Inscription - ShadowComm</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
     <div class="container">
-        <h1>Inscription</h1>
-        <form method="post" class="card form-card">
-            <label for="username">Nom de code</label>
-            <input type="text" id="username" name="username" required>
+      <h1>Inscription</h1>
 
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" name="password" required>
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="card">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
 
-            <label class="checkbox">
-                <input type="checkbox" name="accept_rules">
-                J'accepte les règles de confidentialité.
-            </label>
+      <form method="post" class="card form-card">
+        <label for="username">Nom de code</label>
+        <input type="text" id="username" name="username" required />
 
-            <button type="submit" class="button">Créer le compte</button>
-        </form>
+        <label for="nom">Nom complet</label>
+        <input type="text" id="nom" name="nom" />
 
-        <p><a href="{{ url_for('auth.login') }}">Déjà un compte ? Connexion</a></p>
-        <p><a href="{{ url_for('main.home') }}">Retour à l'accueil</a></p>
+        <label for="age">Âge</label>
+        <input type="number" id="age" name="age" min="18" />
+
+        <label for="lieu_affectation">Lieu d'affectation</label>
+        <input type="text" id="lieu_affectation" name="lieu_affectation" />
+
+        <label for="niveau_id">Niveau</label>
+        <select id="niveau_id" name="niveau_id">
+          {% for niveau in niveaux %}
+          <option value="{{ niveau['id'] }}">{{ niveau['nom'] }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="specialite_id">Spécialité</label>
+        <select id="specialite_id" name="specialite_id">
+          {% for specialite in specialites %}
+          <option value="{{ specialite['id'] }}">{{ specialite['nom'] }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" name="password" required />
+
+        <label class="checkbox">
+          <input type="checkbox" name="accept_rules" />
+          J'accepte les règles de confidentialité.
+        </label>
+
+        <button type="submit" class="button">Créer le compte</button>
+      </form>
+
+      <p>
+        <a href="{{ url_for('auth.login') }}">Déjà un compte ? Connexion</a>
+      </p>
+      <p><a href="{{ url_for('main.home') }}">Retour à l'accueil</a></p>
     </div>
-</body>
+  </body>
 </html>

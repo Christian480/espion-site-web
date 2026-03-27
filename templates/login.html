@@ -1,23 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShadowComm</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion - ShadowComm</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
     <div class="container">
-        <h1>ShadowComm</h1>
-        <p class="intro">Agence de communication discrète pour agents infiltrés.</p>
-        <div class="card">
-            <h2>Bienvenue</h2>
-            <p>Inscris-toi ou connecte-toi pour accéder au chat chiffré par code César.</p>
-            <div class="buttons">
-                <a href="{{ url_for('auth.register') }}" class="button">S'inscrire</a>
-                <a href="{{ url_for('auth.login') }}" class="button">Se connecter</a>
-            </div>
-        </div>
+      <h1>Connexion</h1>
+
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div class="card">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+
+      <form method="post" class="card form-card">
+        <label for="username">Nom de code</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit" class="button">Se connecter</button>
+      </form>
+
+      <p>
+        <a href="{{ url_for('auth.register') }}"
+          >Pas encore de compte ? Inscription
+        </a>
+      </p>
+      <p><a href="{{ url_for('main.home') }}">Retour à l'accueil</a></p>
     </div>
-</body>
+  </body>
 </html>

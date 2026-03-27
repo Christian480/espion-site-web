@@ -11,11 +11,13 @@ def create_app(test_config=None):
     app.config["SECRET_KEY"] = "shadowcomm-secret"
     app.config["DATABASE"] = "shadowcomm.db"
     app.config["CAESAR_KEY"] = 3
+    app.config["AUTO_INIT_DB"] = False
 
     if test_config is not None:
         app.config.update(test_config)
 
-    init_db(app.config["DATABASE"])
+    if app.config["AUTO_INIT_DB"]:
+        init_db(app.config["DATABASE"])
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)

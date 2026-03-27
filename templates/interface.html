@@ -1,26 +1,247 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - ShadowComm</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>Connexion</h1>
-        <form method="post" class="card form-card">
-            <label for="username">Nom de code</label>
-            <input type="text" id="username" name="username" required>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShadowComm</title>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <div class="logo-icon">&#128269;</div>
+        <div>
+          <span class="logo-name">ShadowComm</span>
+          <span class="logo-sub">Agence d'espionnage</span>
+        </div>
+      </div>
+      <ul class="nav-links">
+        <li><a href="{{ url_for('main.agents') }}">Listes des Agents</a></li>
+        <li><a href="#features">Niveaux de Classification</a></li>
+        <li><a href="{{ url_for('chat.chat') }}">Centre de communication</a></li>
+      </ul>
+    </nav>
 
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit" class="button">Se connecter</button>
-        </form>
-
-        <p><a href="{{ url_for('auth.register') }}">Pas encore de compte ? Inscription</a></p>
-        <p><a href="{{ url_for('main.home') }}">Retour à l'accueil</a></p>
-    </div>
-</body>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="hero-tagline">
+          La confidentialité et la fiabilité sont nos points forts.
+        </p>
+        <h1 class="hero-title">Agence<br />ShadowComm</h1>
+        <div class="hero-buttons">
+          <a href="{{ url_for('auth.register') }}" class="btn-primary"
+            >S'inscrire</a
+          >
+          <a href="{{ url_for('auth.login') }}" class="btn-outline"
+            >Se connecter</a
+          >
+        </div>
+    
+    <section class="features" id="features">
+      <div>
+        <p class="feature-title">
+          <span class="feature-number">01.&nbsp;</span>Fiabilité
+        </p>
+        <p class="feature-desc">
+          Des agents expérimentés et discrets opèrent au sein de notre réseau.
+        </p>
+      </div>
+      <div>
+        <p class="feature-title">
+          <span class="feature-number">02.&nbsp;</span>Confidentialité
+        </p>
+        <p class="feature-desc">
+          Vos messages sont chiffrés. Nous ne conservons aucune donnée.
+        </p>
+      </div>
+      <div>
+        <p class="feature-title">
+          <span class="feature-number">03.&nbsp;</span>Transparence
+        </p>
+        <p class="feature-desc">
+          Des communications claires et sécurisées pour toutes les missions.
+        </p>
+      </div>
+      <div>
+        <p class="feature-title">
+          <span class="feature-number">04.&nbsp;</span>Efficacité
+        </p>
+        <p class="feature-desc">
+          Chaque mission est menée à son terme avec un rapport détaillé.
+        </p>
+      </div>
+    </section>
+  </body>
 </html>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #0d0d0d;
+    color: #f2f2f2;
+  }
+
+  /* ── Navbar ── */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 60px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 46px;
+    height: 46px;
+    border: 2px solid #2b9af3;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #2b9af3;
+  }
+
+  .logo-name {
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: white;
+    display: block;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: #888;
+    letter-spacing: 1px;
+    display: block;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: #2b9af3;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    height: 100vh;
+    background-color: #111;
+    display: flex;
+    align-items: flex-end;
+    padding: 80px 60px;
+  }
+
+  .hero-content {
+    max-width: 580px;
+  }
+
+  .hero-tagline {
+    color: #999;
+    font-size: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #444;
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-size: 72px;
+    font-weight: 900;
+    color: white;
+    line-height: 1.05;
+    margin-bottom: 32px;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+  }
+
+  .btn-primary {
+    background-color: #2b9af3;
+    color: white;
+    padding: 14px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover {
+    background-color: #1a7fd4;
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: white;
+    padding: 14px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 2px solid white;
+    transition: background 0.2s;
+  }
+
+  .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  /* ── Features ── */
+  .features {
+    background-color: #0d0d0d;
+    padding: 60px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+
+  .feature-number {
+    color: #2b9af3;
+    font-weight: bold;
+  }
+
+  .feature-title {
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .feature-desc {
+    color: #999;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+</style>

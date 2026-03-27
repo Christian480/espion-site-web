@@ -27,7 +27,7 @@ class Message:
         cursor = db.cursor()
         cursor.execute(
             """
-            SELECT messages.id, users.username, messages.content, messages.timestamp
+            SELECT messages.id, users.code_name AS username, messages.content, messages.timestamp
             FROM messages
             JOIN users ON users.id = messages.sender_id
             ORDER BY messages.timestamp ASC, messages.id ASC
@@ -35,17 +35,12 @@ class Message:
         )
         rows = cursor.fetchall()
         db.close()
-
-        messages = []
-
-        for row in rows:
-            messages.append(
-                Message(
-                    row["id"],
-                    row["username"],
-                    decrypt_message(row["content"], key),
-                    row["timestamp"],
-                )
-            )
-
-        return messages
+        return [
+            {
+                "id": row["id"],
+                "username": row["username"],
+                "content": decrypt_message(row["content"], key),
+                "timestamp": row["timestamp"],
+            }
+            for row in rows
+        ]
