@@ -33,7 +33,7 @@ def init_db():
 
     CREATE TABLE IF NOT EXISTS specialite (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        specialite TEXT NOT NULL
+        nom TEXT NOT NULL
     );
 
     CREATE TABLE IF NOT EXISTS users (
@@ -61,13 +61,11 @@ def init_db():
     (4,'cyber-espion');
     """)
 
-    cursor.execute("ALTER TABLE users ADD IF NOT EXISTS COLUMN nom TEXT")
-    cursor.execute("ALTER TABLE users ADD IF NOT EXISTS COLUMN age INTEGER")
-    cursor.execute("ALTER TABLE users ADD IF NOT EXISTS COLUMN Lieu_affectation TEXT")
-    cursor.execute("ALTER TABLE message ADD IF NOT EXISTS COLUMN timestamp DATETIME")
-    cursor.execute("ALTER TABLE message ADD IF NOT EXISTS FOREIGN KEY (receiver_id) REFERENCES users(id)")
-    cursor.execute("ALTER TABLE message ADD IF NOT EXISTS COLUMN status INTEGER")
-    cursor.execute("ALTER TABLE message ADD IF NOT EXISTS COLUMN receiver_id INTEGER")
+    #cursor.execute("ALTER TABLE users ADD IF NOT EXISTS COLUMN nom TEXT")
+    #cursor.execute("ALTER TABLE users ADD IF NOT EXISTS COLUMN age INTEGER")
+    #cursor.execute("ALTER TABLE users ADD IF NOT EXISTS COLUMN Lieu_affectation TEXT")
+    #cursor.execute("ALTER TABLE message ADD IF NOT EXISTS COLUMN timestamp DATETIME")
+    #cursor.execute("ALTER TABLE message ADD IF NOT EXISTS COLUMN status INTEGER")
     cursor.execute("DROP TABLE IF EXISTS messages")
 
     db.commit()
