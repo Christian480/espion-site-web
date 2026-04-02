@@ -33,6 +33,14 @@ class ShadowCommTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("ShadowComm", text)
 
+    def test_classification_page(self):
+        response = self.client.get("/classification")
+        text = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Niveaux de classification", text)
+        self.assertIn("Niveau S", text)
+
     def test_register_login_and_send_message(self):
         response = self.client.post(
             "/register",
@@ -64,7 +72,8 @@ class ShadowCommTestCase(unittest.TestCase):
         )
         text = response.get_data(as_text=True)
 
-        self.assertIn("MINUIT", text)
+        self.assertIn("PLQXLW", text)
+        self.assertIn("Déchiffrer", text)
 
         db = get_connection(self.db_path)
         cursor = db.cursor()
@@ -85,6 +94,82 @@ class ShadowCommTestCase(unittest.TestCase):
         self.assertEqual(user_row["specialite_id"], 4)
         self.assertIsNotNone(row)
         self.assertEqual(row["content"], "PLQXLW")
+
+    def test_user_can_decrypt_displayed_chat_message(self):
+        self.client.post(
+            "/register",
+            data={
+                "username": "field-agent",
+                "niveau_id": "1",
+                "specialite_id": "1",
+                "password": "secret123",
+                "accept_rules": "on",
+            },
+            follow_redirects=True,
+        )
+
+        self.client.post(
+            "/login",
+            data={"username": "field-agent", "password": "secret123"},
+            follow_redirects=True,
+        )
+
+        self.client.post(
+            "/chat",
+            data={"content": "MINUIT"},
+            follow_redirects=True,
+        )
+
+        db = get_connection(self.db_path)
+        cursor = db.cursor()
+        cursor.execute("SELECT id, content FROM messages ORDER BY id DESC LIMIT 1")
+        row = cursor.fetchone()
+        db.close()
+
+        response = self.client.post(
+            f"/chat/messages/{row['id']}/decrypt",
+            follow_redirects=True,
+        )
+        text = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(row["content"], "PLQXLW")
+        self.assertIn("PLQXLW", text)
+        self.assertIn("MINUIT", text)
+        self.assertIn("Message déchiffré", text)
+
+    def test_chat_page_hides_manual_decrypt_and_agents_page_shows_classes(self):
+        self.client.post(
+            "/register",
+            data={
+                "username": "decrypt-agent",
+                "niveau_id": "2",
+                "specialite_id": "4",
+                "password": "secret123",
+                "accept_rules": "on",
+            },
+            follow_redirects=True,
+        )
+
+        self.client.post(
+            "/login",
+            data={"username": "decrypt-agent", "password": "secret123"},
+            follow_redirects=True,
+        )
+
+        response = self.client.get("/chat")
+        text = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("Déchiffrer une transmission", text)
+
+        response = self.client.get("/agents")
+        text = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("decrypt-agent", text)
+        self.assertIn("Classe A", text)
+        self.assertIn("cyber-espion", text)
 
     def test_legacy_database_allows_register_and_login(self):
         legacy_fd, legacy_path = tempfile.mkstemp()

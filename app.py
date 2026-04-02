@@ -6,22 +6,41 @@ from routes.chat_routes import chat_bp
 from routes.main_routes import main_bp
 
 
-def create_app(test_config=None):
-    app = Flask(__name__)
-    app.config["SECRET_KEY"] = "shadowcomm-secret"
-    app.config["DATABASE"] = "shadowcomm.db"
-    app.config["CAESAR_KEY"] = 3
-    app.config["AUTO_INIT_DB"] = False
+DEFAULT_CONFIG = {
+    "SECRET_KEY": "shadowcomm-secret",
+    "DATABASE": "shadowcomm.db",
+    "CAESAR_KEY": 3,
+    "AUTO_INIT_DB": False,
+}
+
+
+def _configure_app(app, test_config=None):
+    """Charge la configuration par défaut puis celle des tests si besoin."""
+    app.config.update(DEFAULT_CONFIG)
 
     if test_config is not None:
         app.config.update(test_config)
 
+
+def _init_database_if_needed(app):
+    """Initialise la base seulement si l'option est activée."""
     if app.config["AUTO_INIT_DB"]:
         init_db(app.config["DATABASE"])
 
+
+def _register_blueprints(app):
+    """Ajoute les routes de l'application."""
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(chat_bp)
+
+
+def create_app(test_config=None):
+    app = Flask(__name__)
+
+    _configure_app(app, test_config)
+    _init_database_if_needed(app)
+    _register_blueprints(app)
 
     return app
 
@@ -30,4 +49,5 @@ app = create_app()
 
 
 if __name__ == "__main__":
+    init_db(app.config["DATABASE"])
     app.run(debug=True)

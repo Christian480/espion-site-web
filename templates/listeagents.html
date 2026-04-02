@@ -21,7 +21,7 @@
           >
         </li>
         <li>
-          <a href="{{ url_for('main.home') }}">Niveaux de Classification</a>
+          <a href="{{ url_for('main.classification') }}">Niveaux de Classification</a>
         </li>
         <li>
           <a href="{{ url_for('chat.chat') }}">Centre de communication</a>
@@ -44,6 +44,8 @@
           <div class="agent-avatar">&#128373;</div>
           <p class="agent-id">AGENT #{{ '%04d' % agent['id'] }}</p>
           <p class="agent-name">{{ agent['username'] }}</p>
+          <p class="agent-class">Classe {{ agent['niveau'] }}</p>
+          <p class="agent-specialite">{{ agent['specialite'] }}</p>
           <span class="agent-status">
             <span class="status-dot"></span> Actif
           </span>
@@ -228,7 +230,27 @@
     font-size: 17px;
     font-weight: bold;
     color: white;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+  }
+
+  .agent-class {
+    display: inline-block;
+    background-color: rgba(43, 154, 243, 0.12);
+    color: #7cc4ff;
+    border: 1px solid rgba(43, 154, 243, 0.35);
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .agent-specialite {
+    font-size: 13px;
+    color: #b6b6b6;
+    margin-bottom: 14px;
   }
 
   .agent-status {

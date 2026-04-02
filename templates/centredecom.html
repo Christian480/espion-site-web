@@ -195,6 +195,44 @@
         color: #ccc;
         font-size: 14px;
         line-height: 1.7;
+        word-break: break-word;
+      }
+
+      .msg-meta {
+        margin-bottom: 8px;
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #555;
+      }
+
+      .msg-actions {
+        margin-top: 12px;
+      }
+
+      .msg-decrypt-form {
+        display: inline-block;
+      }
+
+      .btn-msg-decrypt {
+        background-color: transparent;
+        color: #7cc4ff;
+        border: 1px solid #2b9af3;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+          background-color 0.2s,
+          color 0.2s;
+      }
+
+      .btn-msg-decrypt:hover {
+        background-color: rgba(43, 154, 243, 0.12);
+        color: white;
       }
 
       .empty-msgs {
@@ -232,8 +270,9 @@
         border-bottom: 1px solid #1a1a1a;
       }
 
-      /* Send form */
-      .send-form textarea {
+      /* Send / decrypt forms */
+      .send-form textarea,
+      .decrypt-form textarea {
         width: 100%;
         background-color: #111;
         border: 1px solid #222;
@@ -248,11 +287,13 @@
         line-height: 1.6;
       }
 
-      .send-form textarea:focus {
+      .send-form textarea:focus,
+      .decrypt-form textarea:focus {
         border-color: #2b9af3;
       }
 
-      .send-form textarea::placeholder {
+      .send-form textarea::placeholder,
+      .decrypt-form textarea::placeholder {
         color: #444;
       }
 
@@ -274,6 +315,53 @@
 
       .btn-send:hover {
         background-color: #1a7fd4;
+      }
+
+      .btn-decrypt {
+        margin-top: 10px;
+        width: 100%;
+        background-color: transparent;
+        color: #7cc4ff;
+        border: 1px solid #2b9af3;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+          background-color 0.2s,
+          color 0.2s;
+      }
+
+      .btn-decrypt:hover {
+        background-color: rgba(43, 154, 243, 0.12);
+        color: white;
+      }
+
+      .decrypt-result {
+        margin-top: 14px;
+        background-color: #111;
+        border: 1px solid #1e1e1e;
+        border-left: 3px solid #2b9af3;
+        border-radius: 8px;
+        padding: 14px;
+      }
+
+      .decrypt-label {
+        font-size: 11px;
+        color: #7cc4ff;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+
+      .decrypt-output {
+        color: #f2f2f2;
+        font-size: 14px;
+        line-height: 1.7;
+        word-break: break-word;
       }
 
       /* Agent info */
@@ -357,7 +445,7 @@
       <ul class="nav-links">
         <li><a href="{{ url_for('main.agents') }}">Liste des Agents</a></li>
         <li>
-          <a href="{{ url_for('main.home') }}#features"
+          <a href="{{ url_for('main.classification') }}"
             >Niveaux de Classification</a
           >
         </li>
@@ -394,7 +482,25 @@
               <span class="msg-author">&#128373; {{ msg['username'] }}</span>
               <span class="msg-time">{{ msg['timestamp'][:16] }}</span>
             </div>
+            <p class="msg-meta">Message chiffré</p>
             <p class="msg-body">{{ msg['content'] }}</p>
+            <div class="msg-actions">
+              <form
+                method="post"
+                action="{{ url_for('chat.decrypt_chat_message', message_id=msg['id']) }}"
+                class="msg-decrypt-form"
+              >
+                <button type="submit" class="btn-msg-decrypt">
+                  &#128275; Déchiffrer
+                </button>
+              </form>
+            </div>
+            {% if revealed_message_id == msg['id'] %}
+            <div class="decrypt-result">
+              <p class="decrypt-label">Message déchiffré</p>
+              <p class="decrypt-output">{{ msg['decrypted_content'] }}</p>
+            </div>
+            {% endif %}
           </div>
           {% endfor %}
         </div>
