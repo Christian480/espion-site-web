@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 def caesar_encode(text, shift=3):
     result = ""
     for char in text:
@@ -14,3 +15,25 @@ def caesar_encode(text, shift=3):
 def caesar_decode(text, shift=3):
     # Déchiffrer, c'est décaler dans l'autre sens
     return caesar_encode(text, -shift)
+=======
+def encrypt_message(message, key=3):
+    result = ""
+
+    for char in message:
+        if "a" <= char <= "z":
+            start = ord("a")
+            new_char = chr((ord(char) - start + key) % 26 + start)
+            result += new_char
+        elif "A" <= char <= "Z":
+            start = ord("A")
+            new_char = chr((ord(char) - start + key) % 26 + start)
+            result += new_char
+        else:
+            result += char
+
+    return result
+
+
+def decrypt_message(message, key=3):
+    return encrypt_message(message, -key)
+>>>>>>> christian
