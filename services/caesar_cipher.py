@@ -1,15 +1,20 @@
-def cesar_chiffrer(texte, decalage):
-    resultat = ""
-    for char in texte:
-        if char.isalpha():
-            base = ord('A') if char.isupper() else ord('a')
-            resultat += chr((ord(char) - base + decalage) % 26 + base)
+def encrypt_message(message, key=3):
+    result = ""
+
+    for char in message:
+        if "a" <= char <= "z":
+            start = ord("a")
+            new_char = chr((ord(char) - start + key) % 26 + start)
+            result += new_char
+        elif "A" <= char <= "Z":
+            start = ord("A")
+            new_char = chr((ord(char) - start + key) % 26 + start)
+            result += new_char
         else:
-            resultat += char
-    return resultat
+            result += char
 
-def cesar_dechiffrer(texte, decalage):
-    return cesar_chiffrer(texte, -decalage)
+    return result
 
 
-
+def decrypt_message(message, key=3):
+    return encrypt_message(message, -key)

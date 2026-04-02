@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Niveaux de classification</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #222222;
+        margin: 0;
+        padding: 0;
+      }
+
+      .page {
+        width: 80%;
+        margin: 30px auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border: 1px solid #cccccc;
+      }
+
+      h1 {
+        color: #1f4e79;
+        text-align: center;
+      }
+
+      h2 {
+        color: #333333;
+        margin-top: 25px;
+      }
+
+      h3,
+      p,
+      li {
+        color: #222222;
+      }
+
+      p {
+        line-height: 1.6;
+      }
+
+      ul {
+        padding-left: 20px;
+      }
+
+      .niveau {
+        margin-top: 15px;
+        padding: 10px;
+        border: 1px solid #dddddd;
+        background-color: #fafafa;
+      }
+
+      .niveau h3 {
+        margin-top: 0;
+      }
+
+      a {
+        color: #1f4e79;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <h1>Niveaux de classification</h1>
+
+      <p>
+        Cette page présente les différents niveaux de classification utilisés dans
+        le système ShadowComm.
+      </p>
+
+      <h2>Liste des niveaux</h2>
+
+      <div class="niveau">
+        <h3>Niveau S</h3>
+        <p>Le niveau S est le niveau le plus sensible.</p>
+        <ul>
+          <li>Accès très limité</li>
+          <li>Informations très secrètes</li>
+          <li>Réservé à peu d'agents</li>
+        </ul>
+      </div>
+
+      <div class="niveau">
+        <h3>Niveau A</h3>
+        <p>Le niveau A donne accès à des informations importantes.</p>
+        <ul>
+          <li>Accès contrôlé</li>
+          <li>Données importantes</li>
+          <li>Utilisé par plusieurs agents</li>
+        </ul>
+      </div>
+
+      <div class="niveau">
+        <h3>Niveau C</h3>
+        <p>Le niveau C est le niveau le plus simple.</p>
+        <ul>
+          <li>Accès plus large</li>
+          <li>Informations moins sensibles</li>
+          <li>Utilisé pour les besoins courants</li>
+        </ul>
+      </div>
+
+      <p>
+        <a href="{{ url_for('main.home') }}">Retour à l'accueil</a>
+      </p>
+    </div>
+  </body>
+</html>
