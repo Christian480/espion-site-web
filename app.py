@@ -15,7 +15,6 @@ DEFAULT_CONFIG = {
 
 
 def _configure_app(app, test_config=None):
-    """Charge la configuration par défaut puis celle des tests si besoin."""
     app.config.update(DEFAULT_CONFIG)
 
     if test_config is not None:
@@ -23,13 +22,11 @@ def _configure_app(app, test_config=None):
 
 
 def _init_database_if_needed(app):
-    """Initialise la base seulement si l'option est activée."""
     if app.config["AUTO_INIT_DB"]:
         init_db(app.config["DATABASE"])
 
 
 def _register_blueprints(app):
-    """Ajoute les routes de l'application."""
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(chat_bp)
